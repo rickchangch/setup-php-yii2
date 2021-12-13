@@ -1,9 +1,10 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+use yii\rbac\DbManager;
 
-$config = [
+$common = require __DIR__ . '/common.php';
+
+$config = array_merge_recursive($common, [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -25,9 +26,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
     ],
-    'params' => $params,
     /*
     'controllerMap' => [
         'fixture' => [ // Fixture generation command line.
@@ -35,7 +34,7 @@ $config = [
         ],
     ],
     */
-];
+]);
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment

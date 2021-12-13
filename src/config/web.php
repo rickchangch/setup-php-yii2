@@ -1,9 +1,14 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+use app\models\Account;
+use yii\web\ErrorHandler;
+use yii\web\JsonParser;
 
-$config = [
+$params = require __DIR__ . '/params.php';
+$common = require __DIR__ . '/common.php';
+$routers = require __DIR__ . '/routers.php';
+
+$config = array_merge_recursive($common, [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -11,19 +16,39 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'container' => [
+        'definitions' => [],
+        'singletons' => [
+            'AccountComponent' => [
+                'class' => 'app\components\AccountComponent',
+            ],
+            'AuthItemComponent' => [
+                'class' => 'app\components\AuthItemComponent',
+            ],
+            'SystemLogsComponent' => [
+                'class' => 'app\components\SystemLogsComponent',
+            ],
+        ],
+    ],
     'components' => [
         'request' => [
+            'enableCookieValidation' => true,
             'cookieValidationKey' => $params['cookieValidationKey'],
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => Account::class,
             'enableAutoLogin' => true,
+            'enableSession' => true,
+            'loginUrl' => ['entry'],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'class' => ErrorHandler::class,
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
@@ -41,18 +66,14 @@ $config = [
                 ],
             ],
         ],
-        'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-            ],
+            // 'enableStrictParsing' => true,
+            'rules' => $routers,
         ],
-        */
     ],
-    'params' => $params,
-];
+]);
 
 if (YII_ENV_DEV) {
     // configuration adjustments for 'dev' environment
@@ -60,14 +81,14 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '192.*', '172.*'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1', '192.*', '172.*'],
     ];
 }
 

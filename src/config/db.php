@@ -1,10 +1,14 @@
 <?php
 
+use yii\db\Connection;
+
+$param = require __DIR__ . '/params.php';
+
 return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
-    'username' => 'root',
-    'password' => '',
+    'class' => Connection::class,
+    'dsn' => "mysql:host={$params['db']['host']};dbname={$params['db']['dbname']}",
+    'username' => $params['db']['user'],
+    'password' => $params['db']['pwd'],
     'charset' => 'utf8',
 
     // Schema cache options (for production environment)
