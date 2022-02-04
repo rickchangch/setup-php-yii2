@@ -1,4 +1,4 @@
-FROM php:7.4-fpm-alpine
+FROM arm64v8/php:7.4-fpm-alpine
 
 ENV APP_DIR=/srv/app
 
@@ -14,7 +14,6 @@ RUN apk add --no-cache \
         libjpeg-turbo-dev \
         libpng-dev \
         libzip-dev \
-        # vim \
     && docker-php-ext-configure gd \
         --with-freetype=/usr/include/ \
         --with-jpeg=/usr/include/ \
@@ -40,6 +39,7 @@ WORKDIR ${APP_DIR}
 
 # Change the access permission of specific forders for the needs of yii2 framework
 RUN chmod -Rf 777 ${APP_DIR}/web/assets && \
+    mkdir -p ${APP_DIR}/runtime && \
     chmod -Rf 777 ${APP_DIR}/runtime
 
 # Expose 9000 port for internal comunication between containers

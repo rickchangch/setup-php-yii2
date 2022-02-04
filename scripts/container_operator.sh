@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e -u
 
 SCRIPT_DIR="$( cd "$( dirname "$0" )" && pwd )"
 TASK=""
@@ -28,8 +28,3 @@ case "$TASK" in
   tty)
     docker exec -it $ARGS /bin/bash
 esac
-
-# docker compose exec php yii migrate/create table
-# docker compose exec composer install --no-cache --ignore-platform-reqs
-# docker exec -it app /bin/bash
-# bash scripts/container_operator.sh -d docker

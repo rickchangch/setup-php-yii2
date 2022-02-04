@@ -10,7 +10,7 @@ networks:
 services:
   mysqldb:
     container_name: mysql
-    image: mysql:5.7
+    image: mysql/mysql-server:8.0.28-aarch64
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - database_data:/var/lib/mysql
@@ -23,7 +23,7 @@ services:
      - yii-network
   phpmyadmin:
     container_name: phpmyadmin
-    image: phpmyadmin:apache
+    image: arm64v8/phpmyadmin:apache
     ports:
       - 8306:80
     depends_on:
@@ -37,7 +37,7 @@ services:
     container_name: fpm-app
     build:
       context: ./
-      dockerfile: ./docker/Dockerfile
+      dockerfile: ./docker/Dockerfile-mac
     user: ${WHOAMI}
     volumes:
       - ./src/:/srv/app:cached
@@ -45,7 +45,7 @@ services:
      - yii-network
   backend:
     container_name: nginx
-    image: nginx:stable-alpine
+    image: arm64v8/nginx:stable-alpine
     volumes:
       - ./src/:/srv/app:ro
       - ./logs/:/var/log/nginx:delegated
