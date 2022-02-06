@@ -2,7 +2,7 @@
 
 1. install api test suite
     ```shell
-    php vendor/bin/codecept generate:suite api
+    vendor/bin/codecept generate:suite api
     ```
     - edit tests/api.suite.yml, add REST module
         ```yaml
@@ -25,11 +25,11 @@
     ```
 3. run `build` command after add/remove module
     ```shell
-    php vendor/bin/codecept build
+    vendor/bin/codecept build
     ```
 4. create Cest(class-like structure) test case
     ```shell
-    php vendor/bin/codecept generate:cest api {Name}
+    vendor/bin/codecept generate:cest api {Name}
     ```
 5. run test
     ```shell
