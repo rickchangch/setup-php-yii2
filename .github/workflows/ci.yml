@@ -35,13 +35,13 @@ jobs:
           extensions: gd, zip, pdo, pdo_mysql
           # coverage: xdebug
 
-      - name: Cache Composer dependencies
-        id: composer-cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+      # - name: Cache Composer dependencies
+      #   id: composer-cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: vendor
+      #     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+      #     restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --ignore-platform-reqs
