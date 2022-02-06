@@ -14,17 +14,6 @@ use yii\web\HttpException;
  */
 class AccountController extends ActiveController
 {
-    //
-    // 1. 覆寫index，不依資源導向去編寫REST api
-    // GET /home
-
-    // 2. 資源api，另起custom method處理跨表資源
-    // GET /accounts/{customMethod}
-
-    // 3. 資源api，前端分別請求不同資源，在前端做資料處理
-    // GET /accounts
-    // GET /roles
-
     /**
      * {@inheritDoc}
      * @var Account

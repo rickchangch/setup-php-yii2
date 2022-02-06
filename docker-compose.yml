@@ -14,6 +14,7 @@ services:
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
       - database_data:/var/lib/mysql
+      - ./docker/db:/docker-entrypoint-initdb.d
     environment:
       MYSQL_USER: user
       MYSQL_PASSWORD: user
@@ -30,7 +31,6 @@ services:
       - mysqldb
     environment:
       PMA_HOST: mysqldb
-      MYSQL_ROOT_PASSWORD: root
     networks:
      - yii-network
   app:

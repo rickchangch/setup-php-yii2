@@ -4,7 +4,6 @@ use app\models\Account;
 use yii\web\ErrorHandler;
 use yii\web\JsonParser;
 
-$params = require __DIR__ . '/params.php';
 $common = require __DIR__ . '/common.php';
 $routers = require __DIR__ . '/routers.php';
 
@@ -33,7 +32,7 @@ $config = array_merge_recursive($common, [
     'components' => [
         'request' => [
             'enableCookieValidation' => true,
-            'cookieValidationKey' => $params['cookieValidationKey'],
+            'cookieValidationKey' => $_ENV['COOKIE_VALIDATION_KEY'],
             'parsers' => [
                 'application/json' => JsonParser::class,
             ],

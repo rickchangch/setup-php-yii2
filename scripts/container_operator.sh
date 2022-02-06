@@ -25,6 +25,12 @@ case "$TASK" in
   migrate)
     docker compose exec app php yii migrate$ARGS
     ;;
+  migrate-test)
+    docker compose exec app php tests/bin/yii migrate$ARGS
+    ;;
   tty)
     docker exec -it $ARGS /bin/bash
+  local-test)
+    docker compose exec app php ./vendor/bin/codecept run api
+    ;;
 esac

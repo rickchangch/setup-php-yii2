@@ -1,6 +1,10 @@
 <?php
+
+use app\models\Account;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/test_db.php';
+$routers = require __DIR__ . '/routers.php';
 
 /**
  * Application configuration shared by all test types
@@ -22,10 +26,16 @@ return [
             'basePath' => __DIR__ . '/../web/assets',
         ],
         'urlManager' => [
-            'showScriptName' => true,
+            // 'showScriptName' => true,
+            'showScriptName' => false,
+            'enablePrettyUrl' => true,
+            'rules' => $routers,
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => Account::class,
+            'enableAutoLogin' => true,
+            'enableSession' => true,
+            'loginUrl' => ['entry'],
         ],
         'request' => [
             'cookieValidationKey' => 'test',

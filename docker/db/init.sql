@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS `test_db`;
+GRANT ALL ON *.* TO 'user'@'%';
+GRANT ALL ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
