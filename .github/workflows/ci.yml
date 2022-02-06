@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['8.0']
+        php-versions: ['7.4']
     services:
       mysql:
         image: mysql:latest
@@ -32,46 +32,42 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: gd, zip, pdo, pdo_mysql
-          # coverage: xdebug
+          # extensions: gd, zip, pdo, pdo_mysql
 
-      # - name: Cache Composer dependencies
-      #   id: composer-cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: vendor
-      #     key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-      #     restore-keys: ${{ runner.os }}-composer-
+      - name: Run Docker Compose to deploy dev environment
+        run: make build
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --ignore-platform-reqs
-
-      - name: Start mysql service
-        run: sudo systemctl start mysql
+        run: |
+          cd src/
+          composer install --prefer-dist --no-progress --ignore-platform-reqs
 
       - name: Initiaize application
         run: |
-          php yii migrate --interactive=0
+          cd src/
+          php tests/bin/yii migrate --interactive=0
         env:
           YII_DEBUG: true
           YII_ENV: test
           COOKIE_VALIDATION_KEY: test
           DB_USERNAME: root
           DB_PASSWORD: root
-          DB_DSN: mysql:host=127.0.0.1;dbname=main_db
-          DB_DSN_TEST: mysql:host=127.0.0.1;dbname=test_db
+          DB_DSN: mysql:host=mysqldb;dbname=main_db
+          DB_DSN_TEST: mysql:host=mysqldb;dbname=test_db
 
       - name: Run Unit Tests
         run: |
-          vendor/bin/codecept run api
+          composer require --dev codeception/module-rest --no-cache --ignore-platform-reqs
+          cd src/ && vendor/bin/codecept build
+          cd ../ && docker-compose exec -T app vendor/bin/codecept run api
         env:
           YII_DEBUG: true
           YII_ENV: test
           COOKIE_VALIDATION_KEY: test
           DB_USERNAME: root
           DB_PASSWORD: root
-          DB_DSN: mysql:host=127.0.0.1;dbname=main_db
-          DB_DSN_TEST: mysql:host=127.0.0.1;dbname=test_db
+          DB_DSN: mysql:host=mysqldb;dbname=main_db
+          DB_DSN_TEST: mysql:host=mysqldb;dbname=test_db
 
       # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
       # Docs: https://getcomposer.org/doc/articles/scripts.md
