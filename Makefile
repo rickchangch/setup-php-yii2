@@ -1,3 +1,16 @@
+USER_NAME := $(USER)
+
+run:
+	USER=$(USER_NAME) docker-compose up -d
+kill:
+	USER=$(USER_NAME) docker-compose down -v
+refresh:
+	USER=$(USER_NAME) docker-compose down -v && \
+	USER=$(USER_NAME) docker-compose pull --ignore-pull-failures && \
+	USER=$(USER_NAME) docker-compose up -d
+
+############
+
 DC_FILENAME = docker-compose.yml
 DC_FILENAME_MAC = docker-compose-for-mac.yml
 USER := $(shell id -u)

@@ -1,0 +1,51 @@
+version: "3.6"
+
+networks:
+  your_project_dev:
+    name: your_project_dev_${USER}
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.200.0.0/16"
+services:
+  main_app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: main_app:dev
+    container_name: your_project_dev_${USER}-main_app
+    ports:
+      - ${TYPE_PORT_HERE}:80
+    volumes:
+      - ./:/var/www/html:cached
+    environment:
+      DB_DSN: "mysql:host=${TYPE_DB_HOST};dbname=dev_main_app_db"
+      DB_USERNAME: "xxxxx"
+      DB_PASSWORD: "xxxxx"
+      SERVICE1_INTERNAL_HOST: "http://service1"
+    depends_on:
+      - service1
+    networks:
+      - your_project_dev
+  service1:
+    image: ${TYPE_SERVICE_IMAGE_HERE}
+    container_name: your_project_dev_${USER}-service1
+    environment:
+      DB_DSN: "mysql:host=${TYPE_DB_HOST};dbname=service1_db"
+      DB_USERNAME: "xxxxx"
+      DB_PASSWORD: "xxxxx"
+      SERVICE2_INTERNAL_HOST: "http://service2"
+    depends_on:
+      - service2
+    networks:
+      - your_project_dev
+  service2:
+    image: ${TYPE_SERVICE_IMAGE_HERE}
+    container_name: your_project_dev_${USER}-service2
+    environment:
+      DB_DSN: "mysql:host=${TYPE_DB_HOST};dbname=service2_db"
+      DB_USERNAME: "xxxxx"
+      DB_PASSWORD: "xxxxx"
+    networks:
+      - your_project_dev
