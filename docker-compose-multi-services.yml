@@ -7,7 +7,7 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "172.100.${SUBNET_CLASS_C:-1}.0/24"
+        - subnet: "172.100.${SUBNET_NETWORK_ID_SUFFIX:-1}.0/24"
 services:
   main_app:
     build:
