@@ -1,15 +1,21 @@
+# enable to pass arguments
+%:
+	@:
+ARGS = `arg="$(filter-out $@, $(MAKECMDGOALS))" && echo $${arg:-${1}}`
 USER_NAME := $(USER)
+TARGET_FILE = "docker-compose-multi-services"
 
+# rules for docker-compose-multi-services
 run:
-	USER=$(USER_NAME) docker-compose up -d
+	@SUBNET_CLASS_C=$(call ARGS,1) USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) up -d
 kill:
-	USER=$(USER_NAME) docker-compose down -v
+	USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) down -v
 refresh:
-	USER=$(USER_NAME) docker-compose down -v && \
-	USER=$(USER_NAME) docker-compose pull --ignore-pull-failures && \
-	USER=$(USER_NAME) docker-compose up -d
+	@USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) down -v && \
+	USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) pull --ignore-pull-failures && \
+	SUBNET_CLASS_C=$(call ARGS,1) USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) up -d
 
-############
+############ old rules
 
 DC_FILENAME = docker-compose.yml
 DC_FILENAME_MAC = docker-compose-for-mac.yml
@@ -17,7 +23,7 @@ USER := $(shell id -u)
 GROUP := $(shell id -g)
 WHOAMI = $(USER):$(GROUP)
 
-.PHONE: build kill clean exec composer
+.PHONY: build kill clean exec composer
 
 build:
 	docker compose -f $(DC_FILENAME) up -d
