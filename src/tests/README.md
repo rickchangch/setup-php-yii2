@@ -21,7 +21,7 @@
         ```
 2. enable REST module for testing RESTful API
     ```shell
-    docker compose exec app composer req --dev codeception/module-rest --ignore-platform-reqs
+    docker compose exec app composer require --dev codeception/module-rest --ignore-platform-reqs
     ```
 3. run `build` command after add/remove module
     ```shell
@@ -33,5 +33,5 @@
     ```
 5. run test
     ```shell
-    docker compose exec app php ./vendor/bin/codecept run api
+    docker compose exec app vendor/bin/codecept run api
     ```

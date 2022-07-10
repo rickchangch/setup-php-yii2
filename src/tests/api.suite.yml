@@ -1,13 +1,15 @@
 actor: ApiTester
 modules:
     enabled:
+        # - Yii2:
+        #     configFile: 'config/test.php'
+        #     cleanup: false
         - REST:
-            url: http://localhost:3000/index-test.php/
+            url: http://localhost:3000/index-test.php/api/v1
             depends: Yii2
             part: JSON
             configFile: 'config/test.php'
         - \Helper\Api
         - Asserts
-
     config:
         - Yii2

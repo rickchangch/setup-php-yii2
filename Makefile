@@ -20,13 +20,13 @@ WHOAMI = $(USER):$(GROUP)
 .PHONE: build kill clean exec composer
 
 build:
-	WHOAMI=$(WHOAMI) docker compose -f $(DC_FILENAME) up -d
+	docker compose -f $(DC_FILENAME) up -d
 
 kill:
 	docker compose -f $(DC_FILENAME) down
 
 build-mac:
-	WHOAMI=$(WHOAMI) docker compose -f $(DC_FILENAME_MAC) up -d
+	docker compose -f $(DC_FILENAME_MAC) up -d
 
 kill-mac:
 	docker compose -f $(DC_FILENAME_MAC) down
