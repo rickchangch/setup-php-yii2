@@ -3,17 +3,18 @@
 	@:
 ARGS = `arg="$(filter-out $@, $(MAKECMDGOALS))" && echo $${arg:-${1}}`
 USER_NAME := $(USER)
+PROJECT_NAME := $(shell basename $(PWD))
 TARGET_FILE = "docker-compose-multi-services"
 
 # rules for docker-compose-multi-services
 run:
-	@SUBNET_NETWORK_ID_SUFFIX=$(call ARGS,1) USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) up -d
+	@SUBNET_NETWORK_ID_SUFFIX=$(call ARGS,1) USER=$(USER_NAME) docker-compose -p $(PROJECT_NAME)_$(USER_NAME) -f $(TARGET_FILE) up -d
 kill:
-	USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) down -v
+	USER=$(USER_NAME) docker-compose -p $(PROJECT_NAME)_$(USER_NAME) -f $(TARGET_FILE) down -v
 refresh:
-	@USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) down -v && \
+	@USER=$(USER_NAME) docker-compose -p $(PROJECT_NAME)_$(USER_NAME) -f $(TARGET_FILE) down -v && \
 	USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) pull --ignore-pull-failures && \
-	SUBNET_NETWORK_ID_SUFFIX=$(call ARGS,1) USER=$(USER_NAME) docker-compose -f $(TARGET_FILE) up -d
+	SUBNET_NETWORK_ID_SUFFIX=$(call ARGS,1) USER=$(USER_NAME) docker-compose -p $(PROJECT_NAME)_$(USER_NAME) -f $(TARGET_FILE) up -d
 
 ############ old rules
 
